@@ -1,14 +1,22 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
+const pg = require("pg");
+const pgSession = require("connect-pg-simple")(session);
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+// Initializing PG Session Store
+const sessionStore = new pgSession({
+  tableName: "sessions", // sessions is the table name in the db
+});
+
 // Initializing session
 app.use(
   session({
+    store: sessionStore,
     secret: process.env.EXPRESS_SECRET,
     resave: false,
     saveUninitialized: true,
