@@ -1,6 +1,7 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const Queries = require("../queries");
+const bcrypt = require("bcrypt");
 
 const customFields = {
   usernameField: "email",
@@ -14,7 +15,7 @@ const verifyCallback = async (email, password, done) => {
       return done("No User found", false);
     }
 
-    if (password == user.password) {
+    if (await bcrypt.compare(password, user.password)) {
       return done(null, user);
     } else {
       return done("Authentication Failed", false);
