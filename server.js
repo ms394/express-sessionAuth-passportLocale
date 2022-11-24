@@ -34,7 +34,8 @@ app.use(passport.session());
 
 app.get("/", async (req, res) => {
   try {
-    const user = await getUserByEmail("mohsinsajan394@gmail.com");
+    // passing hardcoded email to fetch the user. The registration will  be done later. 
+    const user = await getUserByEmail("test@test.com");
     if (user) {
       return res.send(JSON.stringify(user));
     } else {
