@@ -8,13 +8,13 @@ const customFields = {
 };
 
 const verifyCallback = async (email, password, done) => {
-  console.log(`The Password is ${password}`);
   try {
     const user = await Queries.getUserByEmail(email);
     if (!user) {
       return done("No User found", false);
     }
-    if (password == "test123") {
+
+    if (password == user.password) {
       return done(null, user);
     } else {
       return done("Authentication Failed", false);
