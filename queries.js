@@ -26,4 +26,18 @@ function getUserById(id) {
   });
 }
 
-module.exports = { getUserByEmail, getUserById };
+function createUser(user_name, email, phone, role, password) {
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO users(user_name,email,phone,role,password) VALUES($1,$2,$3,$4,$5) RETURNING user_id`;
+    pool.query(query, [user_name, email, phone, role, password], (err, res) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      } else {
+        return resolve(res.rows[0]);
+      }
+    });
+  });
+}
+
+module.exports = { getUserByEmail, getUserById, createUser };
