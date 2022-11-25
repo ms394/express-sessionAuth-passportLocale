@@ -72,13 +72,30 @@ app.get("/register", (req, res, next) => {
   res.send(form);
 });
 
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    failureRedirect: "/login-failure",
-    successRedirect: "login-success",
-  })
-);
+// app.post(
+//   "/login",
+//   passport.authenticate("local", {
+//     failureRedirect: "/login-failure",
+//     successRedirect: "login-success",
+//   })
+// );
+
+app.post("/login", function (req, res, next) {
+  passport.authenticate("local", function (err, user, info) {
+    if (err) {
+      console.log("err is" + err);
+      return res.status(401).json({ message: "No user found" });
+    }
+    if (!user) {
+      console.log(info);
+      return res.status(401).json({
+        success: false,
+        message: "authentication failed",
+      });
+    }
+    return res.send({ success: true, message: JSON.stringify(user) });
+  })(req, res, next);
+});
 
 app.get("/login-success", (req, res, next) => {
   res.send("<p>You successfully logged in.</p>");

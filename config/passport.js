@@ -16,9 +16,9 @@ const verifyCallback = async (email, password, done) => {
     }
 
     if (await bcrypt.compare(password, user.password)) {
-      return done(null, user);
+      return done(null, user); // done(err,user,info)
     } else {
-      return done("Authentication Failed", false);
+      return done(null, false, "Authentication Failed. Please try again.");
     }
   } catch (err) {
     return done(err);
@@ -33,9 +33,9 @@ passport.serializeUser((user, done) => {
   done(null, user.user_id);
 });
 
-passport.deserializeUser(async (userId, done) => {
+passport.deserializeUser(async (user_id, done) => {
   try {
-    const user = await Queries.getUserById(userId);
+    const user = await Queries.getUserById(user_id);
     if (!user) {
       return done(null, false);
     }
