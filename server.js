@@ -11,7 +11,7 @@ const Queries = require("./queries");
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 // Initializing PG Session Store
 const sessionStore = new pgSession({
@@ -93,7 +93,11 @@ app.post("/login", function (req, res, next) {
         message: "authentication failed",
       });
     }
-    return res.send({ success: true, message: JSON.stringify(user) });
+    req.logIn(user, (err) => {
+      if (err) throw err;
+      res.send("Successfully Authenticated");
+      console.log(req.user);
+    });
   })(req, res, next);
 });
 
